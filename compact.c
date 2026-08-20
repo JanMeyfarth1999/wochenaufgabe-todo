@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 {
 
     int options;
-    options = getopt(argc, argv, "hl");
+    
     while((options = getopt(argc, argv, "hl"))!= -1)
     {
 
