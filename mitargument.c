@@ -5,8 +5,7 @@
 int main(int argc, char *argv[])
 {
     int options;
-    int itemNummer;
-    itemNummer = atoi(optarg);
+    long itemNummer;
     while ((options = getopt(argc, argv, "hla:d:")) != -1)
     {
 
@@ -24,7 +23,8 @@ int main(int argc, char *argv[])
             printf("Neue Aufgabe: %s\n", optarg);
              break;
         case 'd':
-            printf("Item zum Löschen: %s\n", optarg);
+            itemNummer = atoi(optarg);
+            printf("Item zum Löschen: %d\n", itemNummer);
             break;
         }
     }
