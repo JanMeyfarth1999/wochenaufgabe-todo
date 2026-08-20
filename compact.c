@@ -6,19 +6,17 @@ int main(int argc, char *argv[])
 
     int options;
     options = getopt(argc, argv, "hl");
-    while (options != -1)
+    while((options = getopt(argc, argv, "hl"))!= -1)
     {
 
         if (options == 'h')
         {
-
             printf("Hilfe wurde abgerufen.\n");
         }
         else if (options == 'l')
         {
-            printf("Liste wurde abgerufen.\n");
+            printf("Liste wurde abgerufen ");
         }
-        options = getopt(argc, argv, "hl");
     }
 
     return 0;
