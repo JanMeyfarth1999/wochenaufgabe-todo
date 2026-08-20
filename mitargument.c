@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 int main(int argc, char *argv[])
 {
     int options;
-    while ((options = getopt(argc, argv, "hl")) != -1)
+    int itemNummer;
+    itemNummer = atoi(optarg);
+    while ((options = getopt(argc, argv, "hla:d:")) != -1)
     {
 
         switch (options)
@@ -15,6 +18,13 @@ int main(int argc, char *argv[])
 
         case 'l':
             printf("Liste wurde abgerufen.\n");
+            break;
+
+        case 'a':
+            printf("Neue Aufgabe: %s\n", optarg);
+             break;
+        case 'd':
+            printf("Item zum Löschen: %s\n", optarg);
             break;
         }
     }
