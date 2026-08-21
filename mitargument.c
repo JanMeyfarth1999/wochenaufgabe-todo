@@ -23,9 +23,11 @@ int main(int argc, char *argv[])
             printf("Neue Aufgabe: %s\n", optarg);
              break;
         case 'd':
-            itemNummer = atoi(optarg);
-            printf("Item zum Löschen: %d\n", itemNummer);
+            itemNummer = strtol(optarg, &endptr, 10);
+            if(endptr == optarg || *endptr != '\0' ) {
+            printf("Ungültige Item-Nummer !");
             break;
+            }
         }
     }
 
