@@ -6,6 +6,7 @@ int main(int argc, char *argv[])
 {
     int options;
     long itemNummer;
+    char *endptr;
     while ((options = getopt(argc, argv, "hla:d:")) != -1)
     {
 
@@ -28,6 +29,8 @@ int main(int argc, char *argv[])
             printf("Ungültige Item-Nummer !");
             break;
             }
+            printf("Item zum Löschen: %ld\n", itemNummer);
+            break;
         }
     }
 
