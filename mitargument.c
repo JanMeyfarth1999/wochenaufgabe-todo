@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
              break;
         case 'd':
             itemNummer = strtol(optarg, &endptr, 10);
-            if(endptr == optarg || *endptr != '\0' ) {
+            if(endptr == optarg || *endptr != '\0' || itemNummer <= 0 ) {
             printf("Ungültige Item-Nummer !");
             break;
             }
