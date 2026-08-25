@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 
 int istGueltigeNummer(char *text, long *ergebnis)
 {
@@ -16,6 +17,7 @@ int istGueltigeNummer(char *text, long *ergebnis)
 int main(int argc, char *argv[])
 {
     int options;
+    int gefunden;
     long itemNummer;
     char zeile[256];
     int zeilenNummer = 0;
@@ -24,7 +26,7 @@ int main(int argc, char *argv[])
     // Lässt nur meinen default als fehler auswerfen und lässt
     // die Fehlermeldung von getopt() nicht mehr auswerfen:
     opterr = 0;
-    while ((options = getopt(argc, argv, ":hla:d:c:")) != -1)
+    while ((options = getopt(argc, argv, ":hla:d:c:u:")) != -1)
     {
 
         switch (options)
@@ -87,12 +89,11 @@ int main(int argc, char *argv[])
             tempDatei = fopen("temp.txt", "w");
             if (tempDatei == NULL)
             {
-                fclose(datei);                
+                fclose(datei);
                 printf("Datei konnte nicht geöffnet werden !");
                 return 1;
             }
             zeilenNummer = 0;
-            int gefunden = 0;
             while (fgets(zeile, 256, datei) != NULL)
             {
                 zeilenNummer++;
@@ -128,10 +129,107 @@ int main(int argc, char *argv[])
                 printf("Ungültige Item-Nummer !\n");
                 break;
             }
-            printf("Item zum Erledigen: %ld\n", itemNummer);
+            datei = fopen("todo.txt", "r");
+            if (datei == NULL)
+            {
+                printf("Datei konnte nicht geöffnet werden !");
+                return 1;
+            }
+            tempDatei = fopen("temp.txt", "w");
+            if (tempDatei == NULL)
+            {
+                fclose(datei);
+                printf("Datei konnte nicht geöffnet werden !");
+                return 1;
+            }
+            gefunden = 0;
+            zeilenNummer = 0;
+            while (fgets(zeile, 256, datei) != NULL)
+            {
+                zeilenNummer++;
+                if (zeilenNummer == itemNummer)
+                {
+                    gefunden = 1;
+                    fprintf(tempDatei, "[ERLEDIGT] %s", zeile);
+                }
+                else
+                {
+                    fprintf(tempDatei, "%s", zeile);
+                }
+            }
+            fclose(datei);
+            fclose(tempDatei);
+
+            if (gefunden == 0)
+            {
+                remove("temp.txt");
+                printf("Item %ld existiert nicht!\n", itemNummer);
+                break;
+            }
+
+            remove("todo.txt");
+            rename("temp.txt", "todo.txt");
+            printf("Item %ld wurde als erledigt markiert!\n", itemNummer);
+            break;
+
+        case 'u':
+
+            if (istGueltigeNummer(optarg, &itemNummer) == 0)
+            {
+                printf("Ungültige Item-Nummer !\n");
+                break;
+            }
+            datei = fopen("todo.txt", "r");
+            if (datei == NULL)
+            {
+                printf("Datei konnte nicht geöffnet werden !");
+                return 1;
+            }
+            tempDatei = fopen("temp.txt", "w");
+            if (tempDatei == NULL)
+            {
+                fclose(datei);
+                printf("Datei konnte nicht geöffnet werden !");
+                return 1;
+            }
+            zeilenNummer = 0;
+            gefunden = 0;
+            while (fgets(zeile, 256, datei) != NULL)
+            {
+                zeilenNummer++;
+                if (zeilenNummer == itemNummer)
+                {
+                    gefunden = 1;
+                    if (strncmp(zeile, "[ERLEDIGT] ", 11) == 0)
+                    {
+                        fprintf(tempDatei, "%s", zeile + 11);
+                    }
+                    else
+                    {
+                        fprintf(tempDatei, "%s", zeile);
+                    }
+                }
+                else
+                {
+                    fprintf(tempDatei, "%s", zeile);
+                }
+            }
+            fclose(datei);
+            fclose(tempDatei);
+
+            if (gefunden == 0)
+            {
+                remove("temp.txt");
+                printf("Item %ld existiert nicht!\n", itemNummer);
+                break;
+            }
+
+            remove("todo.txt");
+            rename("temp.txt", "todo.txt");
+            printf("Item %ld wurde als nicht erldeigt markiert!\n", itemNummer);
             break;
         }
-    }
 
-    return 0;
+        return 0;
+    }
 }
