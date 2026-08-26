@@ -234,6 +234,6 @@ int main(int argc, char *argv[])
             break;
         }
 
-        return 0;gcc zusammen.c -o zusammen
+        return 0;
     }
 }
